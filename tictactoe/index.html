@@ -1,0 +1,139 @@
+<html>
+<head>
+    <title>Tic-tac-toe</title>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <style>
+        html, body {
+            font-size: 72px;
+            background: black;
+            color: white;
+            font-family: Arial,serif;
+        }
+        .wrapper {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            margin: auto;
+        }
+        .container {
+            margin: auto;
+            display: flex;
+            width: 300px;
+            height: 300px;
+            flex-wrap: wrap;
+        }
+        .container div {
+            display: flex;
+            width: 33.33333333%;
+            height: 33.33333333%;
+            box-sizing: border-box;
+            border: 1px solid gray;
+        }
+        .container div span {
+            margin: auto;
+        }
+        .game-over-msg {
+            position: absolute;
+            visibility: hidden;
+            width: 100%;
+            text-align: center;
+        }
+        .game-over .game-over-msg, .game-over svg {
+            visibility: visible;
+        }
+        svg {
+            position: absolute;
+            height: 300px;
+            width: 300px;
+            stroke: red;
+            stroke-width: 5px;
+            visibility: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="game-over-msg" visibility="hidden">
+            <span>Game over!</span> <i class="fa fa-refresh" aria-hidden="true" onclick="restartGame()"></i>
+        </div>
+
+        <div class="container">
+            <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" c>
+                <line  x1="50" y1="50" x2="250" y2="250" />
+            </svg>
+
+            <div></div>
+            <div></div>
+            <div></div>
+
+            <div></div>
+            <div></div>
+            <div></div>
+
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</body>
+<script>
+        const players = ['x', 'o'];
+        let player = 0;
+
+        const cells = Array.from(document.querySelectorAll('.container div'));
+        const line = document.querySelector('line');
+        const wrapper = document.querySelector('.wrapper');
+
+        const getCell = (x, y) => {
+            return cells[y * 3 + x].innerText;
+        };
+        
+        const isGameOver = () => {
+            for (let i = 0; i < 3; i++) {
+                // vertically
+                if (!!getCell(i,0) && getCell(i,0) === getCell(i,1) && getCell(i,0) === getCell(i,2)) {
+                    drawLine(i,0, i,2);
+                }
+                //horizontally
+                if (!!getCell(0,i) && getCell(0,i) === getCell(1,i) && getCell(0,i) === getCell(2,i)) {
+                    drawLine(0,i, 2,i);
+                }
+
+            }
+            //diagonally
+            if (!!getCell(1,1) && getCell(0,0) === getCell(1,1) && getCell(0,0) === getCell(2,2)) {
+                drawLine(0,0, 2,2);
+            }
+            if (!!getCell(1,1) && getCell(2,0) === getCell(1,1) && getCell(2,0) === getCell(0,2)) {
+                drawLine(2,0, 0,2);
+            }
+
+            // draw?
+            if (cells.filter(cell => !!cell.innerText).length === 9) {
+                drawLine(0,0, 0,0); //no line
+            }
+        };
+
+        const restartGame = () => {
+            player = 0;
+            cells.forEach(cell=>cell.addEventListener('click', ()=>{
+                if (!cell.innerText) {
+                    cell.innerHTML = '<span>' + players[player] + '</span>';
+                    player = (player + 1) % 2;
+                    isGameOver();
+                }
+            }));
+
+            cells.forEach(cell=>cell.innerHTML = '')
+            wrapper.classList.remove('game-over');
+        };
+
+        const drawLine = (...args) => {
+            wrapper.classList.add('game-over');
+            args.map(a => a*100+50).forEach((a,i) => line.setAttribute(['x1', 'y1', 'x2', 'y2'][i], a));
+        };
+
+        restartGame();
+</script>
+</html>
