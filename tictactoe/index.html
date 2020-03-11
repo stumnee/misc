@@ -86,26 +86,37 @@
         const wrapper = document.querySelector('.wrapper');
 
         const getCell = (x, y) => {
-            return cells[y * 3 + x].innerText;
+            return cells[y * 3 + x];
         };
-        
+
+        const cellsIdentical = (...args) => {
+            let cells = [];
+
+            for (let i = 0; i < args.length; i = i + 2) {
+                cells.push(getCell(args[i], args[i + 1]));
+            }
+
+            return players.filter(p => cells.filter(c => c.innerText === p).length > 2).length > 0;
+        };
+
         const isGameOver = () => {
             for (let i = 0; i < 3; i++) {
+
                 // vertically
-                if (!!getCell(i,0) && getCell(i,0) === getCell(i,1) && getCell(i,0) === getCell(i,2)) {
+                if (cellsIdentical(i,0, i,1, i,2)) {
                     drawLine(i,0, i,2);
                 }
+
                 //horizontally
-                if (!!getCell(0,i) && getCell(0,i) === getCell(1,i) && getCell(0,i) === getCell(2,i)) {
+                if (cellsIdentical(0,i, 1,i, 2,i)) {
                     drawLine(0,i, 2,i);
                 }
-
             }
             //diagonally
-            if (!!getCell(1,1) && getCell(0,0) === getCell(1,1) && getCell(0,0) === getCell(2,2)) {
+            if (cellsIdentical(0,0, 1,1, 2,2)) {
                 drawLine(0,0, 2,2);
             }
-            if (!!getCell(1,1) && getCell(2,0) === getCell(1,1) && getCell(2,0) === getCell(0,2)) {
+            if (cellsIdentical(2,0, 1,1, 0,2)) {
                 drawLine(2,0, 0,2);
             }
 
