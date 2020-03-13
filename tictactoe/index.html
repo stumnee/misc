@@ -100,8 +100,12 @@
         };
 
         const isGameOver = () => {
-            for (let i = 0; i < 3; i++) {
+            // draw? show only msg
+            if (cells.filter(cell => !!cell.innerText).length === 9) {
+                drawLine(0,0, 0,0); //no line
+            }
 
+            for (let i = 0; i < 3; i++) {
                 // vertically
                 if (cellsIdentical(i,0, i,1, i,2)) {
                     drawLine(i,0, i,2);
@@ -118,11 +122,6 @@
             }
             if (cellsIdentical(2,0, 1,1, 0,2)) {
                 drawLine(2,0, 0,2);
-            }
-
-            // draw?
-            if (cells.filter(cell => !!cell.innerText).length === 9) {
-                drawLine(0,0, 0,0); //no line
             }
         };
 
